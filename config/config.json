@@ -1,0 +1,13 @@
+{
+	"Session": {
+		"SecretKey": "",
+		"Name": "gosess",
+		"Options": {
+			"Path": "/",
+			"Domain": "",
+			"MaxAge": 28800,
+			"Secure": false,
+			"HttpOnly": true
+		}
+	},
+}
