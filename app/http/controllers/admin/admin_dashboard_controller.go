@@ -1,11 +1,21 @@
 package admin
 
 import (
-	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"os"
+	"text/template"
 )
 
 func GETDashboardIndex(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	fmt.Println("test")
+
+	responseTemplate, err := template.New("DashboardIndex").Parse("<h1>Yey with {{.}}!</h1>")
+	if err != nil {
+		panic(err)
+	}
+
+	err = responseTemplate.Execute(os.Stdout, "AAAGETDashboardIndex")
+	if err != nil {
+		panic(err)
+	}
 }

@@ -1,0 +1,22 @@
+{
+  "name": "pbblog",
+  "description": "Pbblog",
+  "main": "/",
+  "authors": [
+    "Paul Bele <contact@seblaze.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/skmetaly/pbblog",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}

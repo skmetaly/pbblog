@@ -1,0 +1,14 @@
+:2025
+# location of static files
+root public
+
+log logs/access.log
+
+# enable gzip
+gzip
+
+# for / serve from the port at which the backend serves the website
+proxy / :9999 {
+     # except some things for caddy to serve directly
+     except /assets /files /robots.txt /favicon.ico
+}

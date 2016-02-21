@@ -42,3 +42,7 @@ func Load(configFile string, p Config) {
 		log.Fatalln("Could not parse %q: %v", configFile, err)
 	}
 }
+
+func NewConfig() {
+
+}
