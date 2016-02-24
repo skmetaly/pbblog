@@ -5,7 +5,7 @@ var cssmin = require('gulp-cssmin');
 
 gulp.task('uglify', function() {
   gulp.src(['bower_components/bootstrap/dist/js/bootstrap.min.js'])
-    .pipe(concat('main.js'))
+    .pipe(concat('main.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest('public/assets/js'))
 
