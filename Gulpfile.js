@@ -4,18 +4,30 @@ var concat = require('gulp-concat');
 var cssmin = require('gulp-cssmin');
 
 gulp.task('uglify', function() {
-  gulp.src(['bower_components/bootstrap/dist/js/bootstrap.min.js'])
+  gulp.src([
+    'bower_components/Materialize/dist/js/materialize.js'
+    ])
     .pipe(concat('main.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest('public/assets/js'))
 
-  gulp.src(['bower_components/bootstrap/dist/css/bootstrap.min.css'])
-	.pipe(concat('main.min.css'))
-	.pipe(cssmin())
-	.pipe(gulp.dest('public/assets/css'));
-
-  gulp.src(['bower_components/bootstrap/dist/fonts/*'])
-    .pipe(gulp.dest('public/assets/fonts'))        
 });
 
-gulp.task('default', ['uglify'], function(){});
+gulp.task('minCSS',function(){
+  gulp.src([
+    'bower_components/Materialize/dist/css/materialize.min.css'
+    ]
+  )
+  .pipe(concat('main.min.css'))
+  .pipe(cssmin())
+  .pipe(gulp.dest('public/assets/css'));
+  });
+
+gulp.task('moveFonts',function(){
+
+  gulp.src(['bower_components/Materialize/dist/font/*'])
+    .pipe(gulp.dest('public/assets/font'))          
+  })
+
+gulp.task('default', ['uglify','minCSS','moveFonts'], function(){});
+
