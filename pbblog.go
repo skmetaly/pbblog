@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/skmetaly/pbblog/framework"
+	"github.com/skmetaly/pbblog/framework/bootstrap"
 )
 
 func init() {
@@ -9,5 +9,5 @@ func init() {
 }
 
 func main() {
-	framework.Bootstrap()
+	bootstrap.Run()
 }

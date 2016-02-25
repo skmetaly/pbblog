@@ -1,13 +1,16 @@
-package framework
+package application
 
 import (
 	"github.com/julienschmidt/httprouter"
+	"github.com/skmetaly/pbblog/framework/config"
+	"github.com/skmetaly/pbblog/framework/router"
+	"github.com/skmetaly/pbblog/framework/server"
 )
 
 type App struct {
 	router *httprouter.Router
-	server Server
-	config Config
+	server server.Server
+	config config.Config
 }
 
 func NewApp() *App {
@@ -20,12 +23,12 @@ func NewApp() *App {
 }
 
 func (a *App) SetRouter() {
-	var r = NewRouter()
+	var r = router.NewRouter()
 	a.router = r
 }
 
 func (a *App) SetServer() {
-	var s = NewServer()
+	var s = server.NewServer()
 	a.server = s
 }
 
@@ -35,5 +38,5 @@ func (a *App) SetConfig() {
 }
 
 func (a *App) Run() {
-	StartServer(a.server, a.router)
+	server.StartServer(a.server, a.router)
 }

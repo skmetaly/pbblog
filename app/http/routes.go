@@ -13,5 +13,6 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 func AddRoutes(router *httprouter.Router) {
 	router.GET("/", Index)
+	router.GET("/admin/login", admin.GETDashboardLogin)
 	router.GET("/admin", admin.GETDashboardIndex)
 }

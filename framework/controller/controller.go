@@ -1,4 +1,4 @@
-package framework
+package controller
 
 type BaseController struct {
 }
