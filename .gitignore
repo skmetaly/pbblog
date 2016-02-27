@@ -3,4 +3,5 @@ node_modules
 bower_components
 public/assets/js/main.min.js
 public/assets/css/main.min.css
-public/assets/fonts/
+public/assets/font/
+logs
