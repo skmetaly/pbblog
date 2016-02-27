@@ -1,23 +1,41 @@
 package view
 
 import (
+	//	"github.com/davecgh/go-spew/spew"
 	"html/template"
 	"net/http"
-	"os"
 	"path/filepath"
 )
 
 var resourceTemplatePath string = "resources/templates"
 
-func Render(w http.ResponseWriter, templatePath string) {
-	//templatePath := "resources/templates"
+type View struct {
+	templates *template.Template
+}
 
-	absTemplatePath, err := filepath.Abs(resourceTemplatePath + string(os.PathSeparator) + templatePath)
+func NewView() View {
+	v := &View{}
+	v.LoadViews()
+
+	return *v
+}
+
+func (v *View) LoadViews() {
+	absTemplatePath, err := filepath.Abs(resourceTemplatePath + "/**/**/*.html")
 
 	if err != nil {
 		panic(err)
 	}
 
-	t, _ := template.ParseFiles(absTemplatePath)
-	t.Execute(w, "")
+	var templates = template.Must(template.New("t").ParseGlob(absTemplatePath))
+
+	v.templates = templates
+}
+
+func (v *View) Render(w http.ResponseWriter, r *http.Request, templateName string, data interface{}) {
+	err := v.templates.ExecuteTemplate(w, templateName, data)
+
+	if err != nil {
+		http.Error(w, "Template not found", http.StatusInternalServerError)
+	}
 }

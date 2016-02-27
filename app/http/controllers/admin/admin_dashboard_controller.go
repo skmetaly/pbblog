@@ -2,28 +2,23 @@ package admin
 
 import (
 	"github.com/julienschmidt/httprouter"
-	"github.com/skmetaly/pbblog/framework/view"
+	"github.com/skmetaly/pbblog/framework/application"
+	//"github.com/skmetaly/pbblog/framework/view"
 	"net/http"
-	"os"
-	"text/template"
 )
 
-//	GET admin/
-func GETDashboardIndex(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func GETDashboardLogin(a application.App) httprouter.Handle {
 
-	responseTemplate, err := template.New("DashboardIndex").Parse("<h1>Yey with {{.}}!</h1>")
-	if err != nil {
-		panic(err)
-	}
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		a.View.Render(w, r, "admin/dashboard/logindd", nil)
 
-	err = responseTemplate.Execute(os.Stdout, "AAAGETDashboardIndex")
-	if err != nil {
-		panic(err)
 	}
 }
 
-//	GET admin/login
-func GETDashboardLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func GETDashboardIndex(a application.App) httprouter.Handle {
 
-	view.Render(w, "admin/dashboard/login.html")
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		a.View.Render(w, r, "admin/dashboard/login", nil)
+
+	}
 }
