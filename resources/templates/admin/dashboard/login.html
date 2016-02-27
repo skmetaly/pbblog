@@ -1,3 +1,4 @@
+{{define "admin/dashboard/login"}}
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,11 +11,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 
-<body>
+<body class="fullHeight">
+
+  <div class="row valign-wrapper">
+    <div class="col s12 offset-s0 m6 offset-m3 valign center-align card-panel">
+      <div class="row">
+        <!-- Logo here -->
+      </div>    
+      <form class="col s12">
+        <div class="row">
+          <div class="input-field col s12">
+          <input placeholder="Placeholder" id="username" type="text" class="validate">
+          <label for="username">Username</label>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12">
+          <input placeholder="Placeholder" id="password" type="password" class="validate">
+          <label for="password">Password</label>
+        </div>
+        
+        <button class="waves-effect waves-light btn" type="submit">
+          Login
+        
+        </button>
+
+      </form>    
+
+    </div>
+
+  </div>  
 
   <!--Import jQuery before materialize.js-->
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script type="text/javascript" src="/assets/js/main.min.js"></script>
 </body>
 </html>
-    
+{{end}}
