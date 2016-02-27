@@ -25,7 +25,7 @@ gulp.task('minCSS',function(){
 
 gulp.task('moveFonts',function(){
 
-  gulp.src(['bower_components/Materialize/dist/font/*'])
+  gulp.src(['bower_components/Materialize/dist/font/**/*'])
     .pipe(gulp.dest('public/assets/font'))          
   })
 
