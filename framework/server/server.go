@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
 	"time"
@@ -39,12 +38,12 @@ func NewServer() Server {
 	return server
 }
 
-func StartServer(s Server, router *httprouter.Router) {
+func StartServer(s Server, router http.Handler) {
 	startHTTP(s, router)
 }
 
 // startHTTP starts the HTTP listener
-func startHTTP(s Server, router *httprouter.Router) {
+func startHTTP(s Server, router http.Handler) {
 	fmt.Println(time.Now().Format("2006-01-02 03:04:05 PM"), "Running HTTP "+httpAddress(s))
 
 	// Start the HTTP listener
