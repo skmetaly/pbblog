@@ -4,5 +4,5 @@
 # Install
 
 ~~~
-go get github.com/skemtaly/pbblog
+go get github.com/skmetaly/pbblog
 ~~~
