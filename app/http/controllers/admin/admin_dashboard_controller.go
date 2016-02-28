@@ -10,15 +10,13 @@ import (
 func GETDashboardLogin(a application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		a.View.Render(w, r, "admin/dashboard/logindd", nil)
-
+		a.View.Render(w, r, "admin/dashboard/login", nil)
 	}
 }
 
 func GETDashboardIndex(a application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		a.View.Render(w, r, "admin/dashboard/login", nil)
-
+		a.View.Render(w, r, "admin/dashboard/index", nil)
 	}
 }
