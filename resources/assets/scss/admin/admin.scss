@@ -1,0 +1,50 @@
+body{
+
+ $cyan-blue: #37474f; 
+ $cyan-blue-link : rgba(255, 255, 255, 0.56);
+ $cyan-blue-dark : #263238;
+ $nav-color : #f5f5f5;
+ $gray : #757575;
+  
+ header, main, footer {
+     padding-left:240px;
+ }
+ 
+ nav.top-nav a.page-title {
+    line-height: 65px;
+    font-size: 24px;
+ }
+ 
+ nav.top-nav {
+    height: 65px;
+    background: $nav-color;
+    
+    a{
+        color : $gray;    
+    }
+
+ }
+ 
+ #main-nav.side-nav{
+     background-color: $cyan-blue;
+     
+     li.avatar-header{
+        height:151px;
+        background-color: $cyan-blue-dark;
+            
+     }
+     
+     li {
+        a {
+             color: $cyan-blue-link;
+        }
+    }
+    
+    li:hover{
+        background-color: #00BCD4;
+        a {
+            color: #37474F;
+        }
+    }
+ }
+}

@@ -20,3 +20,4 @@ func GETDashboardIndex(a application.App) httprouter.Handle {
 		a.View.Render(w, r, "admin/dashboard/index", nil)
 	}
 }
+
