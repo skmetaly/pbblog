@@ -19,4 +19,6 @@ func AddFERoutes(router *httprouter.Router, a application.App) {
 
 func AddAdminRoutes(router *httprouter.Router, a application.App) {
 	router.GET("/admin", admin.GETDashboardIndex(a))
+	router.GET("/admin/users/new", admin.GETUsersNew(a))
+	router.POST("/admin/users/new", admin.POSTUsersNew(a))
 }
