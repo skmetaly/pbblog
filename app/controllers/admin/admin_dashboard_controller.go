@@ -9,14 +9,14 @@ import (
 
 func GETDashboardLogin(a application.App) httprouter.Handle {
 
-	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		a.View.Render(w, r, "admin/dashboard/login", nil)
 	}
 }
 
 func GETDashboardIndex(a application.App) httprouter.Handle {
 
-	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		a.View.Render(w, r, "admin/dashboard/index", nil)
 	}
 }
