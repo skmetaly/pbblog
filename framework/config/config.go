@@ -2,31 +2,36 @@ package config
 
 import (
 	"encoding/json"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/skmetaly/pbblog/framework/database"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 )
 
-// Parser must implement ParseJSON
+//Parser must implement ParseJSON
 type ConfigInterface interface {
 	ParseJSON([]byte) error
 }
 
-// Config contains the application settings
+//Config contains the application settings
 type Config struct {
+	Database database.Database
 }
 
-// ParseJSON unmarshals bytes to structs
-func (c *Config) ParseJSON(b []byte) error {
-	return json.Unmarshal(b, &c)
-}
-
-// Load the JSON config file
-func Load(configFile string, p Config) {
+//Return the json content of files
+func (c *Config) getConfigJSON(configFolder string, configFile string) ([]byte, error) {
 	var err error
 	var input = io.ReadCloser(os.Stdin)
-	if input, err = os.Open(configFile); err != nil {
+	configPath, err := filepath.Abs(configFolder + "/" + configFile + ".json")
+
+	if err != nil {
+		log.Fatalln("Could not parse %q: %v", configPath, err)
+	}
+
+	if input, err = os.Open(configPath); err != nil {
 		log.Fatalln(err)
 	}
 
@@ -37,12 +42,27 @@ func Load(configFile string, p Config) {
 		log.Fatalln(err)
 	}
 
+	return jsonBytes, err
+}
+
+//Loads all known configs from files
+func (c *Config) Load(configFolder string) {
+	var err error
+	configFile := "database"
+
+	jsonBytes, _ := c.getConfigJSON(configFolder, configFile)
+	err = json.Unmarshal(jsonBytes, &c.Database)
+
 	// Parse the config
-	if err := p.ParseJSON(jsonBytes); err != nil {
+	if err != nil {
 		log.Fatalln("Could not parse %q: %v", configFile, err)
 	}
 }
 
-func NewConfig() {
+//NewConfig returns a new config instance
+func NewConfig() Config {
+	c := Config{}
+	c.Load("config")
 
+	return c
 }

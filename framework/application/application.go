@@ -30,8 +30,7 @@ func (a *App) SetServer() {
 }
 
 func (a *App) SetConfig() {
-	//c := NewConfig()
-	//a.config = c
+	a.Config = config.NewConfig()
 }
 
 func (a *App) SetViews() {
