@@ -18,7 +18,10 @@ func GETUsersNew(a application.App) httprouter.Handle {
 func POSTUsersNew(a application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		user, err := users.NewUser(
+
+		userRepository := users.UserRepository{Db: a.Database}
+
+		user, err := userRepository.NewUser(
 			r.FormValue("username"),
 			r.FormValue("email"),
 			r.FormValue("password"),
@@ -32,6 +35,8 @@ func POSTUsersNew(a application.App) httprouter.Handle {
 
 			return
 		}
+
+		a.Database.ORMConnection.Create(&user)
 
 		http.Redirect(w, r, "/admin/users?flash=User+created", http.StatusFound)
 

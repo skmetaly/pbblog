@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/skmetaly/pbblog/framework/database"
 	"io"
 	"io/ioutil"
@@ -18,7 +17,7 @@ type ConfigInterface interface {
 
 //Config contains the application settings
 type Config struct {
-	Database database.Database
+	DatabaseConfig database.DatabaseConfig
 }
 
 //Return the json content of files
@@ -51,7 +50,7 @@ func (c *Config) Load(configFolder string) {
 	configFile := "database"
 
 	jsonBytes, _ := c.getConfigJSON(configFolder, configFile)
-	err = json.Unmarshal(jsonBytes, &c.Database)
+	err = json.Unmarshal(jsonBytes, &c.DatabaseConfig)
 
 	// Parse the config
 	if err != nil {

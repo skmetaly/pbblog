@@ -6,6 +6,7 @@ import (
 )
 
 var (
+	errDuplicateUser    = validation.ValidationError(errors.New("This username already exists"))
 	errNoUsername       = validation.ValidationError(errors.New("You must supply a username"))
 	errNoEmail          = validation.ValidationError(errors.New("You must supply a email"))
 	errNoPassword       = validation.ValidationError(errors.New("You must supply a password"))

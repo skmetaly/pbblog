@@ -1,5 +1,6 @@
 {
     "Username": "dbUser",
     "Password": "dbPass",
-    "Database": "db"
+    "Database": "db",
+    "Host": "localhost"
 }
