@@ -3,7 +3,7 @@ package users
 import (
 	"github.com/jinzhu/gorm"
 	//"github.com/satori/go.uuid"
-	"github.com/davecgh/go-spew/spew"
+	//"github.com/davecgh/go-spew/spew"
 	"github.com/skmetaly/pbblog/framework/database"
 	"golang.org/x/crypto/bcrypt"
 	"strings"
@@ -29,6 +29,30 @@ type UserRepository struct {
 	Db database.Database
 }
 
+//Save persists to database a User type
+func (uR *UserRepository) Save(user User) {
+	uR.Db.ORMConnection.Create(&user)
+}
+
+//ById returns a User object that has the provided id
+func (uR *UserRepository) ById(usernameId int) User {
+
+	user := User{}
+
+	uR.Db.ORMConnection.Where("id = ?", usernameId).First(&user)
+	return user
+}
+
+//ByEmail returns a User object that has a given email address
+func (uR *UserRepository) ByEmail(email string) User {
+
+	user := User{}
+
+	uR.Db.ORMConnection.Where("email = ?", email).First(&user)
+	return user
+}
+
+//ByUsername returns a User object that has a given username
 func (uR *UserRepository) ByUsername(username string) User {
 
 	user := User{}
@@ -38,7 +62,7 @@ func (uR *UserRepository) ByUsername(username string) User {
 }
 
 //NewUser creates validates input and creates a new user instance
-func (uR *UserRepository) NewUser(username string, email string, password string) (User, error) {
+func (uR *UserRepository) NewUser(username string, email string, password string, passwordVerification string) (User, error) {
 	user := User{
 		Username: username,
 		Email:    email,
@@ -58,12 +82,18 @@ func (uR *UserRepository) NewUser(username string, email string, password string
 		return user, errNoPassword
 	}
 
+	if strings.Compare(password, passwordVerification) != 0 {
+		return user, errPasswordDoesntMatch
+	}
+
 	if email == "" {
 		return user, errNoEmail
 	}
 
-	if len(password) < passwordLength {
-		return user, errPasswordTooShort
+	duplicateUserByEmail := uR.ByEmail(email)
+
+	if strings.Compare(duplicateUserByEmail.Email, email) == 0 {
+		return user, errDuplicateEmail
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

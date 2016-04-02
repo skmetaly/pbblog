@@ -25,6 +25,7 @@ func POSTUsersNew(a application.App) httprouter.Handle {
 			r.FormValue("username"),
 			r.FormValue("email"),
 			r.FormValue("password"),
+			r.FormValue("password_verification"),
 		)
 
 		if validation.IsValidationError(err) {
@@ -36,7 +37,9 @@ func POSTUsersNew(a application.App) httprouter.Handle {
 			return
 		}
 
-		a.Database.ORMConnection.Create(&user)
+		userRepository.Save(user)
+
+		//a.Database.ORMConnection.Create(&user)
 
 		http.Redirect(w, r, "/admin/users?flash=User+created", http.StatusFound)
 
