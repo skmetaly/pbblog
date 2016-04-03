@@ -10,7 +10,9 @@ import (
 func GETDashboardLogin(a application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		a.View.Render(w, r, "admin/dashboard/login", nil)
+		a.View.Render(w, r, "admin/dashboard/login", map[string]bool{
+			"HideHeader": true,
+		})
 	}
 }
 
@@ -20,4 +22,3 @@ func GETDashboardIndex(a application.App) httprouter.Handle {
 		a.View.Render(w, r, "admin/dashboard/index", nil)
 	}
 }
-
