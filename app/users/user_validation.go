@@ -13,4 +13,5 @@ var (
 	errPasswordDoesntMatch = validation.ValidationError(errors.New("Passwords doesn't match"))
 	errPasswordTooShort    = validation.ValidationError(errors.New("Your password is too short"))
 	errDuplicateEmail      = validation.ValidationError(errors.New("This email already exists"))
+	errBadCredentials      = validation.ValidationError(errors.New("Username and/or password are wrong"))
 )

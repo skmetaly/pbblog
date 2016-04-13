@@ -2,7 +2,9 @@ package config
 
 import (
 	"encoding/json"
+	//"github.com/davecgh/go-spew/spew"
 	"github.com/skmetaly/pbblog/framework/database"
+	"github.com/skmetaly/pbblog/framework/session"
 	"io"
 	"io/ioutil"
 	"log"
@@ -10,7 +12,7 @@ import (
 	"path/filepath"
 )
 
-//Parser must implement ParseJSON
+//ConfigInterface Parser must implement ParseJSON
 type ConfigInterface interface {
 	ParseJSON([]byte) error
 }
@@ -18,6 +20,7 @@ type ConfigInterface interface {
 //Config contains the application settings
 type Config struct {
 	DatabaseConfig database.DatabaseConfig
+	SessionConfig  session.SessionConfig
 }
 
 //Return the json content of files
@@ -44,7 +47,7 @@ func (c *Config) getConfigJSON(configFolder string, configFile string) ([]byte, 
 	return jsonBytes, err
 }
 
-//Loads all known configs from files
+//Load loads all known configs from files
 func (c *Config) Load(configFolder string) {
 	var err error
 	configFile := "database"
@@ -52,7 +55,17 @@ func (c *Config) Load(configFolder string) {
 	jsonBytes, _ := c.getConfigJSON(configFolder, configFile)
 	err = json.Unmarshal(jsonBytes, &c.DatabaseConfig)
 
-	// Parse the config
+	// Parse the config database
+	if err != nil {
+		log.Fatalln("Could not parse %q: %v", configFile, err)
+	}
+
+	configFile = "session"
+
+	jsonBytes, _ = c.getConfigJSON(configFolder, configFile)
+	err = json.Unmarshal(jsonBytes, &c.SessionConfig)
+
+	// Parse the session config
 	if err != nil {
 		log.Fatalln("Could not parse %q: %v", configFile, err)
 	}

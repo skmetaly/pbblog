@@ -6,4 +6,5 @@ public/assets/css/
 resources/assets/css/
 public/assets/font/
 config/database.json
+config/session.json
 logs

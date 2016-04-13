@@ -2,10 +2,12 @@ package application
 
 import (
 	// "github.com/davecgh/go-spew/spew"
+	"github.com/gorilla/sessions"
 	"github.com/julienschmidt/httprouter"
 	"github.com/skmetaly/pbblog/framework/config"
 	"github.com/skmetaly/pbblog/framework/database"
 	"github.com/skmetaly/pbblog/framework/server"
+	"github.com/skmetaly/pbblog/framework/session"
 	"github.com/skmetaly/pbblog/framework/view"
 )
 
@@ -17,6 +19,7 @@ type App struct {
 	Config   config.Config
 	View     view.View
 	Database database.Database
+	Session  *sessions.Session
 }
 
 func NewApp() App {
@@ -27,6 +30,7 @@ func NewApp() App {
 	app.SetConfig()
 	app.SetViews()
 	app.SetDatabase()
+	app.SetSession()
 
 	AppContainerInstance = *app
 
@@ -56,4 +60,9 @@ func (a *App) SetDatabase() {
 
 	a.Database.Connect()
 	a.Database.ConnectORM()
+}
+
+//SetSession sets the session config for later usage
+func (a *App) SetSession() {
+	session.Configure(a.Config.SessionConfig)
 }

@@ -1,0 +1,13 @@
+{
+    "SecretKey": "your_secret_pass",
+    "Name": "pbblog",
+    "MaxLoginAttempts": 5,
+    "LoginAttemptsKey": "login_attempts",
+    "Options": {
+        "Path": "/",
+        "Domain": "localhost",
+        "MaxAge": 28800,
+        "Secure": false,
+        "HttpOnly": true
+    }
+}

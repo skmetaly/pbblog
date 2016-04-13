@@ -8,14 +8,16 @@ import (
 	"net/http"
 )
 
-func GETUsersNew(a application.App) httprouter.Handle {
+//GETUsersNew GET admin/users/new
+func GETUsersNew(a *application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		a.View.Render(w, r, "admin/users/new", nil)
 	}
 }
 
-func POSTUsersNew(a application.App) httprouter.Handle {
+//POSTUsersNew POST admin/users/new
+func POSTUsersNew(a *application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 

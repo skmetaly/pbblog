@@ -2,23 +2,32 @@ package app
 
 import (
 	"fmt"
+	//	"github.com/davecgh/go-spew/spew"
 	"github.com/julienschmidt/httprouter"
 	"github.com/skmetaly/pbblog/app/controllers/admin"
 	"github.com/skmetaly/pbblog/framework/application"
 	"net/http"
 )
 
+//  [todo] Move this to config
+var adminPrefix = "admin"
+
+//Index
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "Welcome!\n")
 }
 
-func AddFERoutes(router *httprouter.Router, a application.App) {
+//AddFERoutes Adds all the FE routes that don't need user login
+func AddFERoutes(router *httprouter.Router, a *application.App) {
 	router.GET("/", Index)
 	router.GET("/admin/login", admin.GETDashboardLogin(a))
+	router.POST("/admin/login", admin.POSTDashboardLogin(a))
 }
 
-func AddAdminRoutes(router *httprouter.Router, a application.App) {
-	router.GET("/admin", admin.GETDashboardIndex(a))
-	router.GET("/admin/users/new", admin.GETUsersNew(a))
-	router.POST("/admin/users/new", admin.POSTUsersNew(a))
+//AddAdminRoutes Adds all the admin routes that need user login
+func AddAdminRoutes(router *httprouter.Router, a *application.App) {
+	router.GET("/"+adminPrefix, admin.GETDashboardIndex(a))
+	router.GET("/"+adminPrefix+"/logout", admin.GETDashboardLogout(a))
+	router.GET("/"+adminPrefix+"/users/new", admin.GETUsersNew(a))
+	router.POST("/"+adminPrefix+"/users/new", admin.POSTUsersNew(a))
 }

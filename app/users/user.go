@@ -3,8 +3,12 @@ package users
 import (
 	"github.com/jinzhu/gorm"
 	//"github.com/satori/go.uuid"
+	//"errors"
 	//"github.com/davecgh/go-spew/spew"
+	"github.com/gorilla/sessions"
 	"github.com/skmetaly/pbblog/framework/database"
+	"github.com/skmetaly/pbblog/framework/hash"
+	"github.com/skmetaly/pbblog/framework/session"
 	"golang.org/x/crypto/bcrypt"
 	"strings"
 	"time"
@@ -100,4 +104,53 @@ func (uR *UserRepository) NewUser(username string, email string, password string
 	user.Password = string(hashedPassword)
 
 	return user, err
+}
+
+//ValidateLogin validates a user using given credentials
+func ValidateLogin(username string, password string) error {
+
+	if username == "" {
+		return errNoUsername
+	}
+
+	if password == "" {
+		return errNoPassword
+	}
+
+	return nil
+}
+
+//LoginUser tries to login a user using given credentials
+func LoginUser(sess *sessions.Session, uR *UserRepository, username string, password string) (bool, error) {
+
+	err := ValidateLogin(username, password)
+
+	//Check if we have the needed values for login
+	if err != nil {
+		return false, err
+	}
+
+	//Get the username object that has this username
+	user := uR.ByUsername(username)
+
+	//Check if the username exists
+	if user.ID == 0 {
+		return false, errBadCredentials
+	}
+
+	//If we have a username, check if passwords are matching
+	passMatch := hash.CompareWithHash([]byte(user.Password), password)
+
+	if passMatch == false {
+		return false, errBadCredentials
+	}
+
+	//Login successful, clear all session variables and add the user details in session
+	//Need to thing more of this if it's really necessary
+	session.Empty(sess)
+
+	sess.Values["user_id"] = user.ID
+	sess.Values["username"] = user.Username
+
+	return true, nil
 }
