@@ -4,24 +4,23 @@
       <div class="row">
         <!-- Logo here -->
       </div>    
-      <form class="col s12">
+      <form action="/admin/login" method="POST" class="col s12">
         <div class="row">
           <div class="input-field col s12">
-          <input placeholder="Placeholder" id="username" type="text" class="validate">
+          <input placeholder="Placeholder" id="username" type="text" class="validate" name="username" value="{{.Username}}">
           <label for="username">Username</label>
-        </div>
+          </div>
 
-        <div class="row">
           <div class="input-field col s12">
-          <input placeholder="Placeholder" id="password" type="password" class="validate">
+          <input placeholder="Placeholder" id="password" type="password" class="validate" name="password">
           <label for="password">Password</label>
-        </div>
+          </div>
+        
         
         <button class="waves-effect waves-light btn" type="submit">
           Login
-        
         </button>
-
+        </div>
       </form>    
 
     </div>

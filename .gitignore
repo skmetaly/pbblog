@@ -2,6 +2,9 @@ pbblog
 node_modules
 bower_components
 public/assets/js/main.min.js
-public/assets/css/main.min.css
+public/assets/css/
+resources/assets/css/
 public/assets/font/
+config/database.json
+config/session.json
 logs

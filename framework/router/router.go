@@ -6,6 +6,7 @@ import (
 	"github.com/skmetaly/pbblog/framework/application"
 )
 
+//NewRouter Creates a new httprouter.Router instance
 func NewRouter() *httprouter.Router {
 	router := httprouter.New()
 	notFound := new(NotFound)
@@ -14,14 +15,16 @@ func NewRouter() *httprouter.Router {
 	return router
 }
 
-func NewAdminRouter(a application.App) *httprouter.Router {
+//NewAdminRouter creates a new router with all admin routes added
+func NewAdminRouter(a *application.App) *httprouter.Router {
 	router := NewRouter()
 	app.AddAdminRoutes(router, a)
 
 	return router
 }
 
-func NewFERouter(a application.App) *httprouter.Router {
+//NewFERouter creates a new router with all front end routes added
+func NewFERouter(a *application.App) *httprouter.Router {
 	router := NewRouter()
 	app.AddFERoutes(router, a)
 

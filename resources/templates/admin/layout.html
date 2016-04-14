@@ -1,18 +1,105 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <!--Import Google Icon Font-->
-  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!--Import main.css-->
-  <link type="text/css" rel="stylesheet" href="/assets/css/main.min.css"  media="screen,projection"/>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Admin pannel for PB Admin">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
 
-  <!--Let browser know website is optimized for mobile-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="PB Admin">
+    
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#3372DF">
+
+    <link rel="shortcut icon" href="images/favicon.png">
+    <!--Import Google Icon Font-->
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <!--Import main.css-->
+    <link type="text/css" rel="stylesheet" href="/assets/css/main.min.css"  media="screen,projection"/>
+
+    <style>
+    #view-source {
+      position: fixed;
+      display: block;
+      right: 0;
+      bottom: 0;
+      margin-right: 40px;
+      margin-bottom: 40px;
+      z-index: 900;
+    }
+</style>
 </head>
 
-<body class="fullHeight">
+<body>
+    {{if .HideHeader}}
+    <main class="no-padding">
+    {{else}}
+    <header>
+      <nav class="top-nav">
+        <div class="container">
+          <div class="nav-wrapper"><a class="page-title">Showcase</a></div>
+        </div>
+      </nav>
+      <ul id="main-nav" class="side-nav fixed">
+        <li class="avatar-header">
+            <a href="" class="btn-flat user-icon"><img src="/assets/images/admin/user.png" alt="Admin User Icon"/></a>
+            
+            <a class="waves-effect btn-flat teal-text text-lighten-2 dropdown-button" 
+                href="#!" 
+                data-activates="userDropdown"
+                data-beloworigin="true" 
+                >
+                    skmetaly<i class="mdi-navigation-arrow-drop-down right"></i>
+            </a>
+                    
 
-{{yield}}
+            <!-- Dropdown Structure -->
+            <ul id='userDropdown' class='dropdown-content'>
+                <li><a href="#!" class="white-text">Profile</a></li>
+                <li class="divider"></li>
+                <li><a href="/admin/logout" class="white-text">Logout</a></li>
+            </ul>                        
+        </li>
+        
+        <li class="bold"><a href="about.html" class="waves-effect waves-teal">About</a></li>
+        <li class="bold"><a href="getting-started.html" class="waves-effect waves-teal">Getting Started</a></li>
+        <li class="bold"><a href="http://materializecss.com/mobile.html" class="waves-effect waves-teal">Mobile</a></li>
+        <li class="bold"><a href="showcase.html" class="waves-effect waves-teal">Showcase</a></li>
+      </ul>
+    </header>
+    <main>
+    {{end}}
+    
+        <div class="container">
+            {{if .Error}}
+                <div class="row">
+                        <div class="m12 s12 col">
+                        <div class="card-panel deep-orange darken-1">
+                            <div class="row">
+                                <div class="col l8 white-text">
+                                    <h5>An error has occured</h5>
+                                    <h6>{{.Error}}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+            {{end}}
+                
+            {{yield}}        
+        </div>
+    </main>
+    
 <!--Import jQuery before materialize.js-->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="/assets/js/main.min.js"></script>
