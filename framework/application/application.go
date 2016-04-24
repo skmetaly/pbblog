@@ -1,27 +1,40 @@
 package application
 
 import (
+	// "github.com/davecgh/go-spew/spew"
+	"github.com/gorilla/sessions"
 	"github.com/julienschmidt/httprouter"
 	"github.com/skmetaly/pbblog/framework/config"
+	"github.com/skmetaly/pbblog/framework/database"
 	"github.com/skmetaly/pbblog/framework/server"
+	"github.com/skmetaly/pbblog/framework/session"
 	"github.com/skmetaly/pbblog/framework/view"
 )
 
+var AppContainerInstance App
+
 type App struct {
-	Router *httprouter.Router
-	Server server.Server
-	Config config.Config
-	View   view.View
+	Router   *httprouter.Router
+	Server   server.Server
+	Config   config.Config
+	View     view.View
+	Database database.Database
+	Session  *sessions.Session
 }
 
 func NewApp() App {
+
 	app := &App{}
 
 	app.SetServer()
 	app.SetConfig()
 	app.SetViews()
+	app.SetDatabase()
+	app.SetSession()
 
-	return *app
+	AppContainerInstance = *app
+
+	return AppContainerInstance
 }
 
 func (a *App) SetServer() {
@@ -30,11 +43,26 @@ func (a *App) SetServer() {
 }
 
 func (a *App) SetConfig() {
-	//c := NewConfig()
-	//a.config = c
+	a.Config = config.NewConfig()
 }
 
+//SetViews sets the view class
 func (a *App) SetViews() {
 	var v = view.NewView()
 	a.View = v
+}
+
+//SetDatabase creates a database object and sets the connections
+func (a *App) SetDatabase() {
+	a.Database = database.Database{
+		Config: a.Config.DatabaseConfig,
+	}
+
+	a.Database.Connect()
+	a.Database.ConnectORM()
+}
+
+//SetSession sets the session config for later usage
+func (a *App) SetSession() {
+	session.Configure(a.Config.SessionConfig)
 }

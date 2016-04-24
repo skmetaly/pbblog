@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/gorilla/context"
 	"log"
 	"net/http"
 	"time"
@@ -47,7 +48,7 @@ func startHTTP(s Server, router http.Handler) {
 	fmt.Println(time.Now().Format("2006-01-02 03:04:05 PM"), "Running HTTP "+httpAddress(s))
 
 	// Start the HTTP listener
-	log.Fatal(http.ListenAndServe(httpAddress(s), router))
+	log.Fatal(http.ListenAndServe(httpAddress(s), context.ClearHandler(router)))
 }
 
 // httpAddress returns the HTTP address

@@ -13,8 +13,8 @@ import (
 func Run() {
 	var app = application.NewApp()
 
-	var adminRouter = router.NewAdminRouter(app)
-	var feRouter = router.NewFERouter(app)
+	var adminRouter = router.NewAdminRouter(&app)
+	var feRouter = router.NewFERouter(&app)
 
 	middleware := middleware.Middleware{}
 
