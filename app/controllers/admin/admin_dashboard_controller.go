@@ -7,6 +7,7 @@ import (
 	"github.com/skmetaly/pbblog/framework/session"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
 )
 
@@ -14,8 +15,9 @@ import (
 func GETDashboardLogin(a *application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		a.View.Render(w, r, "admin/dashboard/login", map[string]bool{
+		a.View.Render(w, r, "admin/dashboard/login", map[string]interface{}{
 			"HideHeader": true,
+			"NextURL":    r.URL.Query().Get("next"),
 		})
 	}
 }
@@ -58,7 +60,15 @@ func POSTDashboardLogin(a *application.App) httprouter.Handle {
 			log.Println("Error with saving session")
 		}
 
-		http.Redirect(w, r, "/admin", http.StatusFound)
+		//Redirect to "next" if we have a next
+		nextURL, err := url.QueryUnescape(r.URL.Query().Get("next"))
+		redirectURL := "/admin"
+
+		if nextURL != "" {
+			redirectURL = nextURL
+		}
+
+		http.Redirect(w, r, redirectURL, http.StatusFound)
 	}
 }
 
