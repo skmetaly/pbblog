@@ -38,8 +38,8 @@ func (uR *UserRepository) Save(user User) {
 	uR.Db.ORMConnection.Create(&user)
 }
 
-//ById returns a User object that has the provided id
-func (uR *UserRepository) ById(usernameId int) User {
+//ByID returns a User object that has the provided id
+func (uR *UserRepository) ByID(usernameId int) User {
 
 	user := User{}
 
