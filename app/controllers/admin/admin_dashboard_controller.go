@@ -33,7 +33,7 @@ func POSTDashboardLogin(a *application.App) httprouter.Handle {
 		// Prevent brute force login attempts by not hitting MySQL and pretending like it was invalid :-)
 		if sessionInstance.Values[loginAttemptsKey] != nil && sessionInstance.Values[loginAttemptsKey].(int) >= maxLoginAttempts {
 			log.Println("Brute force login prevented")
-			a.View.Render(w, r, "admin/dashboard/index", map[string]string{
+			a.View.Render(w, r, "admin/dashboard/index", map[string]interface{}{
 				"Error": "Brute force login",
 			})
 
