@@ -1,11 +1,10 @@
 package users
 
+//[Todo] move users to framework because view depends on users
 import (
-	"github.com/jinzhu/gorm"
-	//"github.com/satori/go.uuid"
-	//"errors"
-	//"github.com/davecgh/go-spew/spew"
+	//	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/sessions"
+	"github.com/jinzhu/gorm"
 	"github.com/skmetaly/pbblog/framework/database"
 	"github.com/skmetaly/pbblog/framework/hash"
 	"github.com/skmetaly/pbblog/framework/session"
@@ -20,6 +19,7 @@ const (
 	hashCost       = 10
 )
 
+//User model
 type User struct {
 	gorm.Model
 	Username  string
@@ -29,6 +29,7 @@ type User struct {
 	updatedAt time.Time
 }
 
+//UserRepository type
 type UserRepository struct {
 	Db database.Database
 }
