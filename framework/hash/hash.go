@@ -24,3 +24,9 @@ func CompareWithHash(hashPassword []byte, stringPassword string) bool {
 
 	return false
 }
+
+func CreateFromPassword(password string) string {
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+
+	return string(hashedPassword)
+}

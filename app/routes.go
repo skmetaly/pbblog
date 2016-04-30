@@ -20,8 +20,8 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 //AddFERoutes Adds all the FE routes that don't need user login
 func AddFERoutes(router *httprouter.Router, a *application.App) {
 	router.GET("/", Index)
-	router.GET("/admin/login", admin.GETDashboardLogin(a))
-	router.POST("/admin/login", admin.POSTDashboardLogin(a))
+	router.GET("/"+adminPrefix+"/login", admin.GETDashboardLogin(a))
+	router.POST("/"+adminPrefix+"/login", admin.POSTDashboardLogin(a))
 }
 
 //AddAdminRoutes Adds all the admin routes that need user login
@@ -30,4 +30,6 @@ func AddAdminRoutes(router *httprouter.Router, a *application.App) {
 	router.GET("/"+adminPrefix+"/logout", admin.GETDashboardLogout(a))
 	router.GET("/"+adminPrefix+"/users/new", admin.GETUsersNew(a))
 	router.POST("/"+adminPrefix+"/users/new", admin.POSTUsersNew(a))
+	router.GET("/"+adminPrefix+"/profile", admin.GETDashboardProfile(a))
+	router.POST("/"+adminPrefix+"/profile", admin.POSTDashboardProfile(a))
 }

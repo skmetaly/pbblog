@@ -4,6 +4,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/skmetaly/pbblog/app/users"
 	"github.com/skmetaly/pbblog/framework/application"
+	"github.com/skmetaly/pbblog/framework/hash"
 	"github.com/skmetaly/pbblog/framework/session"
 	"log"
 	"net/http"
@@ -30,7 +31,7 @@ func POSTDashboardLogin(a *application.App) httprouter.Handle {
 		loginAttemptsKey := a.Config.SessionConfig.LoginAttemptsKey
 		maxLoginAttempts := a.Config.SessionConfig.MaxLoginAttempts
 
-		// Prevent brute force login attempts by not hitting MySQL and pretending like it was invalid :-)
+		// Prevent brute force login attempts by not hitting MySQL and pretending like it was invalid
 		if sessionInstance.Values[loginAttemptsKey] != nil && sessionInstance.Values[loginAttemptsKey].(int) >= maxLoginAttempts {
 			log.Println("Brute force login prevented")
 			a.View.Render(w, r, "admin/dashboard/index", map[string]interface{}{
@@ -80,6 +81,7 @@ func GETDashboardIndex(a *application.App) httprouter.Handle {
 	}
 }
 
+//GETDashboardLogout GET admin/logout
 func GETDashboardLogout(a *application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -97,4 +99,85 @@ func GETDashboardLogout(a *application.App) httprouter.Handle {
 
 	}
 
+}
+
+func GETDashboardProfile(a *application.App) httprouter.Handle {
+
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+
+		// Get session
+		sess := session.Instance(r)
+
+		if sess.Values["user_id"] != nil {
+			userID := sess.Values["user_id"].(uint)
+			/*
+				if err != nil {
+					http.Redirect(w, r, "/admin/login", http.StatusFound)
+					return
+				}
+			*/
+			uR := &users.UserRepository{Db: a.Database}
+			userModel := uR.ByID(userID)
+
+			a.View.Render(w, r, "admin/dashboard/profile", map[string]interface{}{
+				"User": userModel,
+			})
+
+		}
+	}
+}
+
+func POSTDashboardProfile(a *application.App) httprouter.Handle {
+
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+
+		// Get session
+		sess := session.Instance(r)
+
+		if sess.Values["user_id"] != nil {
+			userID := sess.Values["user_id"].(uint)
+
+			uR := &users.UserRepository{Db: a.Database}
+			user := uR.ByID(userID)
+
+			//Check if the submission is for email and not for password
+			if r.FormValue("email") != "" {
+				user.Email = r.FormValue("email")
+				uR.Update(user)
+			}
+
+			if r.FormValue("current_password") != "" {
+
+				currentPassword := r.FormValue("current_password")
+
+				//Check if passwords are matching
+				passMatch := hash.CompareWithHash([]byte(user.Password), currentPassword)
+
+				if passMatch == false {
+					a.View.Render(w, r, "admin/dashboard/profile", map[string]interface{}{
+						"User":  user,
+						"Error": "Password doesn't match",
+						"Title": "Profile",
+					})
+				} else {
+
+					//Current password is true, update the existing password
+					user.Password = hash.CreateFromPassword(r.FormValue("new_password"))
+					uR.Update(user)
+
+				}
+
+			}
+
+			a.View.Render(w, r, "admin/dashboard/profile", map[string]interface{}{
+				"User":    user,
+				"Success": "Successfully saved",
+				"Title":   "Profile",
+			})
+
+		} else {
+			http.Redirect(w, r, "/admin/login", http.StatusFound)
+			return
+		}
+	}
 }
