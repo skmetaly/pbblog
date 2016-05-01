@@ -79,32 +79,28 @@
     
         <div class="container">
             {{if .Error}}
-                <div class="row">
-                        <div class="m12 s12 col">
-                        <div class="card-panel deep-orange darken-1">
-                            <div class="row">
-                                <div class="col l8 white-text">
-                                    <h5>An error has occured</h5>
-                                    <h6>{{.Error}}</h6>
-                                </div>
-                            </div>
+            <div class="row">
+                <div class="card-panel deep-orange darken-1">
+                    <div class="row">
+                        <div class="col l8 white-text">
+                            <h5>An error has occured</h5>
+                            <h6>{{.Error}}</h6>
                         </div>
                     </div>
-                </div>    
+                </div>
+            </div>
             {{end}}
                 
             {{if .Success}}
                 <div class="row">
-                        <div class="m12 s12 col">
-                        <div class="card-panel teal lighten-2">
-                            <div class="row">
-                                <div class="col l8 white-text">
-                                    <h6>{{.Success}}</h6>
-                                </div>
-                            </div>
+                <div class="card-panel teal lighten-2">
+                    <div class="row">
+                        <div class="col l8 white-text">
+                            <h6>{{.Success}}</h6>
                         </div>
                     </div>
-                </div>    
+                </div>
+                </div>
             {{end}}
                                 
             {{yield}}        

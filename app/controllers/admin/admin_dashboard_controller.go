@@ -10,9 +10,10 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 )
 
-//GETDashboardLogin GET admin/login
+// GETDashboardLogin GET admin/login
 func GETDashboardLogin(a *application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -23,7 +24,7 @@ func GETDashboardLogin(a *application.App) httprouter.Handle {
 	}
 }
 
-//POSTDashboardLogin POST admin/login
+// POSTDashboardLogin POST admin/login
 func POSTDashboardLogin(a *application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -101,6 +102,7 @@ func GETDashboardLogout(a *application.App) httprouter.Handle {
 
 }
 
+// GETDashboardProfile returns the view for the profile of the user
 func GETDashboardProfile(a *application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -127,6 +129,7 @@ func GETDashboardProfile(a *application.App) httprouter.Handle {
 	}
 }
 
+// POSTDashboardProfile handles the POST request for updating the profile of the user
 func POSTDashboardProfile(a *application.App) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -134,50 +137,54 @@ func POSTDashboardProfile(a *application.App) httprouter.Handle {
 		// Get session
 		sess := session.Instance(r)
 
-		if sess.Values["user_id"] != nil {
-			userID := sess.Values["user_id"].(uint)
-
-			uR := &users.UserRepository{Db: a.Database}
-			user := uR.ByID(userID)
-
-			//Check if the submission is for email and not for password
-			if r.FormValue("email") != "" {
-				user.Email = r.FormValue("email")
-				uR.Update(user)
-			}
-
-			if r.FormValue("current_password") != "" {
-
-				currentPassword := r.FormValue("current_password")
-
-				//Check if passwords are matching
-				passMatch := hash.CompareWithHash([]byte(user.Password), currentPassword)
-
-				if passMatch == false {
-					a.View.Render(w, r, "admin/dashboard/profile", map[string]interface{}{
-						"User":  user,
-						"Error": "Password doesn't match",
-						"Title": "Profile",
-					})
-				} else {
-
-					//Current password is true, update the existing password
-					user.Password = hash.CreateFromPassword(r.FormValue("new_password"))
-					uR.Update(user)
-
-				}
-
-			}
-
-			a.View.Render(w, r, "admin/dashboard/profile", map[string]interface{}{
-				"User":    user,
-				"Success": "Successfully saved",
-				"Title":   "Profile",
-			})
-
-		} else {
+		if sess.Values["user_id"] == nil {
 			http.Redirect(w, r, "/admin/login", http.StatusFound)
 			return
 		}
+
+		var err error
+
+		userID := sess.Values["user_id"].(uint)
+		uR := &users.UserRepository{Db: a.Database}
+		user := uR.ByID(userID)
+
+		// Check if the submission is for personal data change
+		if strings.Compare(r.FormValue("action"), "update_personal") == 0 {
+			user.Email = r.FormValue("email")
+			user.FirstName = r.FormValue("first_name")
+			user.LastName = r.FormValue("last_name")
+
+			err = uR.Update(user)
+		}
+
+		// Check if the submission is for password change
+		if strings.Compare(r.FormValue("action"), "update_password") == 0 {
+
+			err = users.ValidatePasswordChange(
+				uR,
+				user,
+				r.FormValue("current_password"),
+				r.FormValue("new_password"),
+				r.FormValue("new_password_verification"))
+
+			if err == nil {
+				user.Password = hash.CreateFromPassword(r.FormValue("new_password"))
+				err = uR.Update(user)
+			}
+
+		}
+
+		viewParameters := map[string]interface{}{
+			"User":    user,
+			"Success": "Successfully saved",
+			"Title":   "Profile",
+		}
+		// Check if there were any errors encountered in the update process
+		if err != nil {
+			viewParameters["Error"] = err.Error()
+			delete(viewParameters, "Success")
+		}
+
+		a.View.Render(w, r, "admin/dashboard/profile", viewParameters)
 	}
 }

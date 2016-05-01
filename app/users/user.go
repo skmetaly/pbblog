@@ -19,7 +19,7 @@ const (
 	hashCost       = 10
 )
 
-//User model
+// User model
 type User struct {
 	gorm.Model
 	Username  string
@@ -31,27 +31,34 @@ type User struct {
 	updatedAt time.Time
 }
 
-//UserRepository type
+// UserRepository type
 type UserRepository struct {
 	Db database.Database
 }
 
-//Save persists to database a User type
+// Save persists to database a User type
 func (uR *UserRepository) Save(user User) {
 	uR.Db.ORMConnection.Create(&user)
 }
 
-//Save persists to database a User type
-func (uR *UserRepository) Update(user User) {
+// Update persists to database changes for a user model
+func (uR *UserRepository) Update(user User) error {
+
+	err := ValidateUpdate(uR, user)
+
+	if err != nil {
+		return err
+	}
 	uR.Db.ORMConnection.Save(&user)
+	return nil
 }
 
-//ByID returns a User object that has the provided id
-func (uR *UserRepository) ByID(usernameId uint) User {
+// ByID returns a User object that has the provided id
+func (uR *UserRepository) ByID(usernameID uint) User {
 
 	user := User{}
 
-	uR.Db.ORMConnection.Where("id = ?", usernameId).First(&user)
+	uR.Db.ORMConnection.Where("id = ?", usernameID).First(&user)
 	return user
 }
 
@@ -64,7 +71,7 @@ func (uR *UserRepository) ByEmail(email string) User {
 	return user
 }
 
-//ByUsername returns a User object that has a given username
+// ByUsername returns a User object that has a given username
 func (uR *UserRepository) ByUsername(username string) User {
 
 	user := User{}
@@ -73,8 +80,14 @@ func (uR *UserRepository) ByUsername(username string) User {
 	return user
 }
 
-//NewUser creates validates input and creates a new user instance
-func (uR *UserRepository) NewUser(username string, email string, password string, passwordVerification string) (User, error) {
+// NewUser creates validates input and creates a new user instance
+func (uR *UserRepository) NewUser(
+	username string,
+	firstName string,
+	lastName string,
+	email string,
+	password string,
+	passwordVerification string) (User, error) {
 	user := User{
 		Username: username,
 		Email:    email,
@@ -111,50 +124,38 @@ func (uR *UserRepository) NewUser(username string, email string, password string
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
 
+	user.FirstName = firstName
+	user.LastName = lastName
 	return user, err
 }
 
-//ValidateLogin validates a user using given credentials
-func ValidateLogin(username string, password string) error {
-
-	if username == "" {
-		return errNoUsername
-	}
-
-	if password == "" {
-		return errNoPassword
-	}
-
-	return nil
-}
-
-//LoginUser tries to login a user using given credentials
+// LoginUser tries to login a user using given credentials
 func LoginUser(sess *sessions.Session, uR *UserRepository, username string, password string) (bool, error) {
 
 	err := ValidateLogin(username, password)
 
-	//Check if we have the needed values for login
+	// Check if we have the needed values for login
 	if err != nil {
 		return false, err
 	}
 
-	//Get the username object that has this username
+	// Get the username object that has this username
 	user := uR.ByUsername(username)
 
-	//Check if the username exists
+	// Check if the username exists
 	if user.ID == 0 {
 		return false, errBadCredentials
 	}
 
-	//If we have a username, check if passwords are matching
+	// If we have a username, check if passwords are matching
 	passMatch := hash.CompareWithHash([]byte(user.Password), password)
 
 	if passMatch == false {
 		return false, errBadCredentials
 	}
 
-	//Login successful, clear all session variables and add the user details in session
-	//Need to thing more of this if it's really necessary
+	// Login successful, clear all session variables and add the user details in session
+	// Need to thing more of this if it's really necessary
 	session.Empty(sess)
 
 	sess.Values["user_id"] = user.ID

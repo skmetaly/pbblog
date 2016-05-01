@@ -25,6 +25,8 @@ func POSTUsersNew(a *application.App) httprouter.Handle {
 
 		user, err := userRepository.NewUser(
 			r.FormValue("username"),
+			r.FormValue("first_name"),
+			r.FormValue("last_name"),
 			r.FormValue("email"),
 			r.FormValue("password"),
 			r.FormValue("password_verification"),
