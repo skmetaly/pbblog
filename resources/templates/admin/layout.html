@@ -47,7 +47,7 @@
     <header>
       <nav class="top-nav">
         <div class="container">
-          <div class="nav-wrapper"><a class="page-title">Showcase</a></div>
+          <div class="nav-wrapper"><a class="page-title">{{.Title}}</a></div>
         </div>
       </nav>
       <ul id="main-nav" class="side-nav fixed">
@@ -65,7 +65,7 @@
 
             <!-- Dropdown Structure -->
             <ul id='userDropdown' class='dropdown-content'>
-                <li><a href="#!" class="white-text">Profile</a></li>
+                <li><a href="/admin/profile" class="white-text">Profile</a></li>
                 <li class="divider"></li>
                 <li><a href="/admin/logout" class="white-text">Logout</a></li>
             </ul>                        
@@ -93,6 +93,20 @@
                 </div>    
             {{end}}
                 
+            {{if .Success}}
+                <div class="row">
+                        <div class="m12 s12 col">
+                        <div class="card-panel teal lighten-2">
+                            <div class="row">
+                                <div class="col l8 white-text">
+                                    <h6>{{.Success}}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+            {{end}}
+                                
             {{yield}}        
         </div>
     </main>

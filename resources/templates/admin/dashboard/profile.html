@@ -1,0 +1,56 @@
+{{define "admin/dashboard/profile"}}  
+        <div class="row">
+            <p class="caption">Here you can administrate your account</p>
+        </div>
+        <div class="row">
+            <h2 class="header">Personal details</h2>
+
+            <form action="/admin/profile" class="col s12" method="POST">
+            
+                <div class="row">
+                    <div class="input-field col s12">
+                    <input id="username" name="" type="text" class="validate" value="{{.User.Username}}" disabled>
+                    <label for="username">Username</label>
+                    </div>
+                </div>
+                                                                
+                <div class="row">
+                    <div class="input-field col s12">
+                    <input id="email" name="email" type="email" class="validate" value="{{.User.Email}}">
+                    <label for="email">Email</label>
+                    </div>
+                </div>
+                
+                <div class="row">                             
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Change
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="row">
+            <h2 class="header">Password change</h2>
+            <form action="/admin/profile" class="col s12" method="POST">
+                <div class="row">
+                    <div class="input-field col s12">
+                    <input id="current_password" name="current_password" type="password" class="validate">
+                    <label for="current_password">Current password</label>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="input-field col s12">
+                    <input id="new_password" name="new_password" type="password" class="validate">
+                    <label for="new_password">New Password</label>
+                    </div>
+                </div>
+                
+               <div class="row">                             
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Change
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>             
+            </form>
+        </div>   
+{{end}}

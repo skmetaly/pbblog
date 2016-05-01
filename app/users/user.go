@@ -2,7 +2,7 @@ package users
 
 //[Todo] move users to framework because view depends on users
 import (
-	//	"github.com/davecgh/go-spew/spew"
+	//"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/sessions"
 	"github.com/jinzhu/gorm"
 	"github.com/skmetaly/pbblog/framework/database"
@@ -25,6 +25,8 @@ type User struct {
 	Username  string
 	Email     string
 	Password  string
+	FirstName string
+	LastName  string
 	createdAt time.Time
 	updatedAt time.Time
 }
@@ -39,8 +41,13 @@ func (uR *UserRepository) Save(user User) {
 	uR.Db.ORMConnection.Create(&user)
 }
 
+//Save persists to database a User type
+func (uR *UserRepository) Update(user User) {
+	uR.Db.ORMConnection.Save(&user)
+}
+
 //ByID returns a User object that has the provided id
-func (uR *UserRepository) ByID(usernameId int) User {
+func (uR *UserRepository) ByID(usernameId uint) User {
 
 	user := User{}
 
