@@ -37,19 +37,19 @@ type UserRepository struct {
 }
 
 // Save persists to database a User type
-func (uR *UserRepository) Save(user User) {
-	uR.Db.ORMConnection.Create(&user)
+func (uR *UserRepository) Save(user *User) {
+	uR.Db.ORMConnection.Create(user)
 }
 
 // Update persists to database changes for a user model
-func (uR *UserRepository) Update(user User) error {
+func (uR *UserRepository) Update(user *User) error {
 
-	err := ValidateUpdate(uR, user)
+	err := ValidateUpdate(uR, *user)
 
 	if err != nil {
 		return err
 	}
-	uR.Db.ORMConnection.Save(&user)
+	uR.Db.ORMConnection.Save(user)
 	return nil
 }
 
