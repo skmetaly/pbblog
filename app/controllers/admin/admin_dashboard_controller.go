@@ -110,22 +110,15 @@ func GETDashboardProfile(a *application.App) httprouter.Handle {
 		// Get session
 		sess := session.Instance(r)
 
-		if sess.Values["user_id"] != nil {
-			userID := sess.Values["user_id"].(uint)
-			/*
-				if err != nil {
-					http.Redirect(w, r, "/admin/login", http.StatusFound)
-					return
-				}
-			*/
-			uR := &users.UserRepository{Db: a.Database}
-			userModel := uR.ByID(userID)
+		userID := sess.Values["user_id"].(uint)
 
-			a.View.Render(w, r, "admin/dashboard/profile", map[string]interface{}{
-				"User": userModel,
-			})
+		uR := &users.UserRepository{Db: a.Database}
+		userModel := uR.ByID(userID)
 
-		}
+		a.View.Render(w, r, "admin/dashboard/profile", map[string]interface{}{
+			"User": userModel,
+		})
+
 	}
 }
 
@@ -136,11 +129,6 @@ func POSTDashboardProfile(a *application.App) httprouter.Handle {
 
 		// Get session
 		sess := session.Instance(r)
-
-		if sess.Values["user_id"] == nil {
-			http.Redirect(w, r, "/admin/login", http.StatusFound)
-			return
-		}
 
 		var err error
 
