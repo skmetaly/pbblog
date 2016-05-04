@@ -41,7 +41,7 @@ func POSTUsersNew(a *application.App) httprouter.Handle {
 			return
 		}
 
-		userRepository.Save(user)
+		userRepository.Save(&user)
 
 		http.Redirect(w, r, "/admin/users?flash=User+created", http.StatusFound)
 

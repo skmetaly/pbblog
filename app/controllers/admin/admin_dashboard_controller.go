@@ -142,7 +142,7 @@ func POSTDashboardProfile(a *application.App) httprouter.Handle {
 			user.FirstName = r.FormValue("first_name")
 			user.LastName = r.FormValue("last_name")
 
-			err = uR.Update(user)
+			err = uR.Update(&user)
 		}
 
 		// Check if the submission is for password change
@@ -157,7 +157,7 @@ func POSTDashboardProfile(a *application.App) httprouter.Handle {
 
 			if err == nil {
 				user.Password = hash.CreateFromPassword(r.FormValue("new_password"))
-				err = uR.Update(user)
+				err = uR.Update(&user)
 			}
 
 		}
